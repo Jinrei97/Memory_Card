@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import Scoreboard from './Scoreboard';
 import Game from './Game';
 
 export default function GameBoard() {
@@ -10,10 +9,12 @@ export default function GameBoard() {
         <>
             <div className="header">
                 <p className="rules">Select each card once</p>
-                <Scoreboard high={highScore} current={currentScore} />
+                <div className="scores">
+                    <p>Current score: {currentScore}</p>
+                    <p>High score: {highScore}</p>
+                </div>
             </div>
             <Game />
         </>
     )
-
 }

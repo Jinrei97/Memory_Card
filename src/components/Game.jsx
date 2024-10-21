@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 
 const ids = [1, 2, 3];
+let hasLoaded = false;
 
 function Card({ url, desc }) {
     return (
@@ -15,39 +16,43 @@ function Card({ url, desc }) {
 
 export default function Game() {
     const [data, setData] = useState([]);
-    const gotData = useRef(false);
+    const renderCount = useRef(0);
+
+    console.log('Render number: ', renderCount.current);
+    renderCount.current += 1;
+    console.log(data);
+
+    async function getImages(list) {
+        const fetchedData = [];
+        list.map((id) => {
+            fetch(`https://pokeapi.co/api/v2/pokemon/${id}/`)
+                .then(response => response.json())
+                .then(json => {
+                    fetchedData.push([id, json.name, json.sprites.front_default]);
+                }).catch(error => {
+                    console.error(error);
+                    fetchedData.push([id, '', '']);
+                });
+            });
+        setData(fetchedData);
+    };
 
     useEffect(() => {
-        async function getImages(list) {
-            list.map((id) => {
-                fetch(`https://pokeapi.co/api/v2/pokemon/${id}/`)
-                    .then(response => response.json())
-                    .then(data => {
-                        setData((arr) => {
-                            arr.push([id, data.name, data.sprites.front_default]);
-                            return arr;
-                        });
-                    }).catch(error => {
-                        console.error(error);
-                        setData((arr) => {
-                            arr.push([id, '', '']);
-                            return arr;
-                        });
-                    });
-            })
-        }
-        if (!gotData.current) {
+        console.log('has loaded: ', hasLoaded);
+        if (!hasLoaded) {
+            hasLoaded = true;
             getImages(ids);
-            gotData.current = true;
-        }
+        } else {
+            console.log('not running');
+        };
     }, []);
 
-    console.log('data ', data);
     return (
         <div className="board">
-            {data.map((pokemon) => {
+            {!hasLoaded ? <div>Loading</div> :
+            data.map((pokemon) => {
                 return <Card key={pokemon.id} url={pokemon[2]} desc={pokemon[1]} />
-            }) }
+            })}
         </div>
     )
 }
