@@ -5,6 +5,12 @@ export default function GameBoard() {
     const [currentScore, setCurrentScore] = useState(0);
     const [highScore, setHighScore] = useState(0);
 
+    useEffect(() => {
+        if (currentScore > highScore) {
+            setHighScore(currentScore);
+        }
+    }, [currentScore])
+
     return (
         <>
             <div className="header">
@@ -14,7 +20,7 @@ export default function GameBoard() {
                     <p>High score: {highScore}</p>
                 </div>
             </div>
-            <Game />
+            <Game setScore={setCurrentScore}/>
         </>
     )
 }

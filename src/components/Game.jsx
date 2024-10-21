@@ -1,17 +1,18 @@
 import { useState, useEffect, useRef } from 'react';
 
-function Card({ url, desc }) {
+function Card({ url, desc, handleCardClick }) {
     return (
-        <div className="card">
+        <div className="card" onClick={handleCardClick}>
             <img src={url} alt="" />
             <p>{desc}</p>
         </div>
     );
 }
 
-export default function Game() {
-    const [ids, setIds] = useState([1, 2, 3]);
+export default function Game({ setScore }) {
+    const [ids, setIds] = useState([1, 2, 3, 500, 350, 432, 155, 634, 72, 13]);
     const [data, setData] = useState([]);
+    const [gotClicked, setGotClicked] = useState({});
     const loading = useRef(true);
 
     async function getImages(list) {
@@ -24,7 +25,12 @@ export default function Game() {
                     return [id, json.name, json.sprites.front_default];
                 })
             );
+            const clickedObj = {};
+            fetchedData.forEach((n) => {
+                clickedObj[n[0]] = false;
+            });
             setData(fetchedData);
+            setGotClicked(clickedObj);
         } catch (error) {
             console.error(error);
         } finally {
@@ -36,14 +42,33 @@ export default function Game() {
         getImages(ids);
     }, [ids]);
 
+    function handleCardClick(id) {
+        if (!gotClicked[id]) {
+            setScore((n) => n + 1);
+            setGotClicked({...gotClicked, [id]:true});
+        } else {
+            setScore(0);
+            setGotClicked(Object.keys(gotClicked).reduce((obj, key) => {
+                obj[key] = false;
+                return obj;
+            }, {}));
+        }
+    }
+
     return (
         <div className="board">
-            
             {loading.current && <div>Loading</div>}
             {
                 !loading.current &&
                 data.map((pokemon) => {
-                    return <Card key={pokemon[0]} url={pokemon[2]} desc={pokemon[1]} />;
+                    return (
+                        <Card 
+                            key={pokemon[0]}
+                            url={pokemon[2]}
+                            desc={pokemon[1]}
+                            handleCardClick={() => handleCardClick(pokemon[0])}
+                        />
+                    )
                 })
             }
         </div>
