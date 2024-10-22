@@ -1,5 +1,16 @@
 import { useState, useEffect, useRef } from 'react';
 
+function shuffleData(a, b) {
+    const test = Math.random();
+    if (test > 0.5) {
+        return -1;
+    } else if (test < 0.5) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
 function Card({ url, desc, handleCardClick }) {
     return (
         <div className="card" onClick={handleCardClick}>
@@ -53,6 +64,7 @@ export default function Game({ setScore }) {
                 return obj;
             }, {}));
         }
+        setData((arr) => arr.sort(shuffleData));
     }
 
     return (
