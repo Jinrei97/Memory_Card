@@ -10,7 +10,7 @@ function Card({ url, desc, handleCardClick }) {
 }
 
 export default function Game({ setScore }) {
-    const [ids, setIds] = useState([1, 2, 3, 500, 350, 432, 155, 634, 72, 13]);
+    const [ids, setIds] = useState([1, 2, 3, 500, 350, 432, 155, 634, 72, 13, 345, 795, 158, 852, 346]);
     const [data, setData] = useState([]);
     const [gotClicked, setGotClicked] = useState({});
     const loading = useRef(true);

@@ -14,7 +14,10 @@ export default function GameBoard() {
     return (
         <>
             <div className="header">
-                <p className="rules">Select each card once</p>
+                <div className="rules">
+                    <h2>Rules:</h2>
+                    <p>Select each card once</p>
+                </div>
                 <div className="scores">
                     <p>Current score: {currentScore}</p>
                     <p>High score: {highScore}</p>
